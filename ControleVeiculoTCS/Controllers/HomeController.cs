@@ -26,6 +26,7 @@ namespace ControleVeiculoTCS.Controllers
                             clienteId = x.ClienteId,
                             nome = x.Nome,
                             endereco = x.Endereco,
+                            telefone = x.Telefone,
                             email = x.Email
                         })).ToList();
 

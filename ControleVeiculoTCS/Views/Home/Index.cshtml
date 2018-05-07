@@ -4,9 +4,9 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="row">
+        <div class="row" style="padding-top:50px;">
             <h2 class="panel-title pull-left">
-                Orders
+                Controle de veículos/clientes
             </h2>
             <button style="margin-right:5px" id="addNewItem" class="btn btn-primary pull-right">Adicionar Cliente</button>
         </div>
@@ -181,6 +181,7 @@
 
                     { "data": "nome", "name": "nome", "autoWidth": true },
                     { "data": "endereco", "name": "endereco", "autoWidth": true },
+                    { "data": "telefone", "name": "telefone", "autoWidth": true },
                     { "data": "email", "name": "email", "autoWidth": true },
                     { "data": null, "name": "Action", "defaultContent": '<a href="#" class="editItem">Editar Cliente</a>', "autoWidth": true }
 
@@ -287,7 +288,7 @@
                 e.preventDefault();
 
                 var veiculoArr = [];
-                clienteArr.length = 0;
+                veiculoArr.length = 0;
 
                 $.each($("#veiculosTable tbody tr"), function () {
                     veiculoArr.push({
@@ -316,12 +317,14 @@
 
             $(document).on("click", '.editItem', function (e) {
                 var data = table.row($(this).parents('tr')).data();
-                //console.log(data);
+                console.log(data);
                 e.preventDefault();
                 var id = data.clienteId;
-
+                //debugger;
                 $.when(getCliente(id)).then(function (res) {
                     var veicArr = [];
+                    veicArr.length = 0;
+                    $("#veiculosTable tbody tr").remove();
                     $("#nome").val(res.result.Nome);
                     $("#endereco").val(res.result.Endereco);
                     $("#telefone").val(res.result.Telefone);
@@ -329,7 +332,11 @@
                     $("#clienteId").val(res.result.ClienteId);
 
                     $.each(res.result.Veiculos, function (i, v) {
+                        //debugger;
+                        
                         veicArr.push('<tr><td>' + v.Marca + '</td><td>' + v.Modelo + '</td><td>' + v.Cor + '</td><td>' + v.Ano + '</td><td>' + v.Placa + '</td><td><a data-itemId="' + v.VeiculoId + '" href="#" class="deleteItem">Excluir</a> | <a href="#" data-itemId="' + v.VeiculoId + '" class="editDetail">Editar</a></td></tr>')
+                    
+                        
                     });
                     $("#veiculosTable tbody").append(veicArr);
                     $("#salvarCliente").html("Atualizar");
