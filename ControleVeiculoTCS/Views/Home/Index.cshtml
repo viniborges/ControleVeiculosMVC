@@ -27,6 +27,84 @@
     </div>
 </div>
 
+<div id="novoClienteModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Novo Cliente - Preencha as informações</h4>
+            </div>
+            <div class="modal-body">
+                <h3>
+                    Veículo
+                </h3>
+                <hr />
+                <div class="form-horizontal">
+                    <input type="hidden" id="clienteId" />
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Nome
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="nome" placeholder="Nome do Cliente" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Endereço
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="endereco" placeholder="Endereço do Cliente" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Telefone
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="telefone" placeholder="Telefone do Cliente" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            E-mail
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="email" placeholder="E-mail do Cliente" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <h3 style="margin-top:10px">Veículos do Cliente</h3>
+                <table id="veiculosTable" class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:20%">Marca</th>
+                            <th style="width:20%">Modelo</th>
+                            <th style="width:20%">Cor</th>
+                            <th style="width:15%">Ano</th>
+                            <th style="width:15%">Placa</th>
+                            <th style="width:10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-info" id="addVeiculo">Adicionar Veículo</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button id="salvarCliente" type="button" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script>
         $(function () {
