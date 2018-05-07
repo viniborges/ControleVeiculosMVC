@@ -115,7 +115,7 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <input type="hidden" id="detailId" />
+                        <input type="hidden" id="veiculoId" />
                         <label class="control-label col-md-2">
                             Marca
                         </label>
@@ -151,7 +151,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3 col-lg-offset-9">
-                            <a id="addToList" class="btn btn-default">Adicioanr Veículo</a>
+                            <a id="addVeiculoList" class="btn btn-default">Adicionar Veículo</a>
                         </div>
                     </div>
                 </div>
@@ -187,6 +187,180 @@
                 ]
             });
 
+            var saveUrl = '@Url.Action("salvarCliente", "Home", new { area=""})';
+
+            //No click do adicionar novo cliente, limpa campos e mostra modal de clientes
+            $("#addNewItem").click(function (e) {
+                e.preventDefault();
+                $("#nome").val('');
+                $("#endereco").val('');
+                $("#clienteId").val('');
+                $("#veiculosTable tbody tr").remove();
+                $("#salvarCliente").html("Salvar");
+                $('#novoClienteModal').modal('show');
+            });
+
+            //No click do add novo veículo, mostra o modal de veículos
+            $("#addVeiculo").click(function (e) {
+                e.preventDefault();
+                $('#veiculosModal').modal('show');
+            });
+
+            $("#addVeiculoList").click(function (e) {
+                e.preventDefault();
+
+                if ($.trim($("#marca").val()) == "" || $.trim($("#modelo").val()) == "" ) return;
+
+                var marca = $("#marca").val(),
+                    modelo = $("#modelo").val(),
+                    cor = $("#cor").val(),
+                    ano = $("#ano").val(),
+                    placa = $("#placa").val(),
+                    veiculosTableBody = $("#veiculosTable tbody");
+
+                var veiculoItem = '<tr><td>' + marca + '</td><td>' + modelo + '</td><td>' + cor + '</td><td>' + ano + '</td><td>' + placa + '</td><td><a data-itemId="0" href="#" class="deleteItem">Excluir</a></td></tr>';
+                veiculosTableBody.append(veiculoItem);
+                clearItem();
+            });
+
+            function clearItem() {
+                $("#marca").val('');
+                $("#modelo").val('');
+                $("#cor").val('');
+                $("#ano").val('');
+                $("#placa").val('');
+            }
+
+            function salvarCliente(data) {
+                return $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    url: saveUrl,
+                    data: data
+                });
+            }
+
+            function getCliente(id) {
+                return $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getSingleCliente", "Home", new { area = "" })',
+                    data: "clienteId=" + id
+                });
+            }
+
+            function getSingleVeiculo(id) {
+                return $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getSingleVeiculo", "Home", new { area = "" })',
+                    data: "id=" + id
+                });
+            }
+
+            function deleteVeiculo(id) {
+                return $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("deleteVeiculo", "Home", new { area = "" })',
+                    data: "id=" + id
+                });
+            }
+
+            $(document).on('click', 'a.deleteItem', function (e) {
+                e.preventDefault();
+                var $self = $(this);
+                if ($(this).attr('data-itemId') == "0") {
+                    $(this).parents('tr').css("background-color", "#FF3700").fadeOut(800, function () {
+                        $(this).remove();
+                    });
+                } else {
+                    $.when(deleteVeiculo($(this).attr('data-itemId'))).then(function (res) {
+                        $self.parents('tr').css("background-color", "#FF3700").fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    }).fail(function (err) {
+
+                    });
+                }
+            });
+
+            $("#salvarCliente").click(function (e) {
+                e.preventDefault();
+
+                var veiculoArr = [];
+                clienteArr.length = 0;
+
+                $.each($("#veiculosTable tbody tr"), function () {
+                    veiculoArr.push({
+                        Marca: $(this).find('td:eq(0)').html(),
+                        Modelo: $(this).find('td:eq(1)').html(),
+                        Cor: $(this).find('td:eq(2)').html(),
+                        Ano: $(this).find('td:eq(3)').html(),
+                        Placa: $(this).find('td:eq(4)').html(),
+                    });
+                });
+
+                var data = JSON.stringify({
+                    Nome: $("#nome").val(),
+                    Endereco: $("#endereco").val(),
+                    Telefone: $("#telefone").val(),
+                    Email: $("#email").val(),
+                    Veiculos: veiculoArr
+                });
+
+                $.when(salvarCliente(data)).then(function (response) {
+                    console.log(response);
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            });
+
+            $(document).on("click", '.editItem', function (e) {
+                var data = table.row($(this).parents('tr')).data();
+                //console.log(data);
+                e.preventDefault();
+                var id = data.clienteId;
+
+                $.when(getCliente(id)).then(function (res) {
+                    var veicArr = [];
+                    $("#nome").val(res.result.Nome);
+                    $("#endereco").val(res.result.Endereco);
+                    $("#telefone").val(res.result.Telefone);
+                    $("#email").val(res.result.Email);
+                    $("#clienteId").val(res.result.ClienteId);
+
+                    $.each(res.result.Veiculos, function (i, v) {
+                        veicArr.push('<tr><td>' + v.Marca + '</td><td>' + v.Modelo + '</td><td>' + v.Cor + '</td><td>' + v.Ano + '</td><td>' + v.Placa + '</td><td><a data-itemId="' + v.VeiculoId + '" href="#" class="deleteItem">Excluir</a> | <a href="#" data-itemId="' + v.VeiculoId + '" class="editDetail">Editar</a></td></tr>')
+                    });
+                    $("#veiculosTable tbody").append(veicArr);
+                    $("#salvarCliente").html("Atualizar");
+                    $('#novoClienteModal').modal('show');
+
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            });
+
+            $(document).on("click", '.editDetail', function (e) {
+
+                e.preventDefault();
+                var id = $(this).attr("data-itemid");
+
+                $.when(getSingleVeiculo(id)).then(function (res) {
+                    var veicArr = [],
+                        data = res.result;
+                    $("#veiculoId").val(data.VeiculoId);
+                    $("#marca").val(data.Marca);
+                    $("#modelo").val(data.Modelo);
+                    $("#cor").val(data.Cor);
+                    $("#ano").val(data.Ano);
+                    $("#placa").val(data.Placa);
+
+                    $('#veiculosModal').modal('show');
+
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            });
         });
     </script>
 }
