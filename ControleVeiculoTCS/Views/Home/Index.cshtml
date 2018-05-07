@@ -105,6 +105,61 @@
     </div>
 </div>
 
+<div id="veiculosModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Novo Veículo</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <input type="hidden" id="detailId" />
+                        <label class="control-label col-md-2">
+                            Marca
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="marca" placeholder="Marca" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Modelo
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="modelo" placeholder="Modelo" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Cor
+                        </label>
+                        <div class="col-md-2">
+                            <input type="text" id="cor" placeholder="Cor" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Ano
+                        </label>
+                        <div class="col-md-2">
+                            <input type="text" id="ano" placeholder="Ano" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Placa
+                        </label>
+                        <div class="col-md-2">
+                            <input type="text" id="placa" placeholder="Placa" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-lg-offset-9">
+                            <a id="addToList" class="btn btn-default">Adicioanr Veículo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script>
         $(function () {
