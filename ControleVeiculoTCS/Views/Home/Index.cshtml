@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <h2 class="panel-title pull-left">
+                Orders
+            </h2>
+            <button style="margin-right:5px" id="addNewItem" class="btn btn-primary pull-right">Adicionar Cliente</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="clientesTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Endereço</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+
+            //Popula o JS Datatable com a listagem de clientes
+            var orderUrl = '@Url.Action("getClientes", "Home")';
+
+            var table = $("#clientesTable").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": false,
+                "orderMulti": false,
+                "ajax": {
+                    "url": orderUrl,
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+
+                    { "data": "nome", "name": "nome", "autoWidth": true },
+                    { "data": "endereco", "name": "endereco", "autoWidth": true },
+                    { "data": "email", "name": "email", "autoWidth": true },
+                    { "data": null, "name": "Action", "defaultContent": '<a href="#" class="editItem">Editar Cliente</a>', "autoWidth": true }
+
+                ]
+            });
+
+        });
+    </script>
+}
