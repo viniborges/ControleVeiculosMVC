@@ -19,7 +19,7 @@ namespace ControleVeiculoTCS.Controllers
 
         public ActionResult getClientes()
         {
-            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            //var draw = Request.Form.GetValues("draw").FirstOrDefault();
             var model = (db.Clientes.ToList()
                         .Select(x => new
                         {
@@ -33,7 +33,7 @@ namespace ControleVeiculoTCS.Controllers
             //Parametros adicionais no retorno do json, usados no JQuery Datable para listagem dos registros
             return Json(new
             {
-                draw = draw,
+                //draw = draw,
                 recordsFiltered = model.Count,
                 recordsTotal = model.Count,
                 data = model
@@ -43,35 +43,49 @@ namespace ControleVeiculoTCS.Controllers
         //Action para salvar o cliente e seus respectivos veículos
         public ActionResult salvarCliente(ClienteViewModel cli)
         {
-            var clienteId = Guid.NewGuid();
-            var cliente = new Clientes()
+            //Se localizar o cliente, é uma edição
+            var findCli = db.Clientes.FirstOrDefault(x => x.ClienteId == cli.ClienteId);
+            if (findCli != null)
             {
-                ClienteId = clienteId,
-                Nome = cli.Nome,
-                Endereco = cli.Endereco,
-                Telefone = cli.Telefone,
-                Email = cli.Email,
-            };
-            db.Clientes.Add(cliente);
-
-            //Processa os veículos do cliente
-            if (cli.Veiculos.Any())
+                findCli.Nome = cli.Nome;
+                findCli.Endereco = cli.Endereco;
+                findCli.Email = cli.Email;
+                findCli.Telefone = cli.Telefone;
+                
+            }
+            //Caso contrário, cria um novo registro
+            else
             {
-                foreach (var item in cli.Veiculos)
+                var clienteId = Guid.NewGuid();
+                var cliente = new Clientes()
                 {
-                    var veiculoId = Guid.NewGuid();
-                    var veiculo = new Veiculos()
-                    {
-                        VeiculoId = veiculoId,
-                        ClienteId = clienteId,
-                        Marca = item.Marca,
-                        Modelo = item.Modelo,
-                        Cor = item.Cor,
-                        Ano = Convert.ToInt32(item.Ano),
-                        Placa = item.Placa
-                    };
+                    ClienteId = clienteId,
+                    Nome = cli.Nome,
+                    Endereco = cli.Endereco,
+                    Telefone = cli.Telefone,
+                    Email = cli.Email,
+                };
+                db.Clientes.Add(cliente);
 
-                    db.Veiculos.Add(veiculo);
+                //Processa os veículos do cliente
+                if (cli.Veiculos.Any())
+                {
+                    foreach (var item in cli.Veiculos)
+                    {
+                        var veiculoId = Guid.NewGuid();
+                        var veiculo = new Veiculos()
+                        {
+                            VeiculoId = veiculoId,
+                            ClienteId = clienteId,
+                            Marca = item.Marca,
+                            Modelo = item.Modelo,
+                            Cor = item.Cor,
+                            Ano = Convert.ToInt32(item.Ano),
+                            Placa = item.Placa
+                        };
+
+                        db.Veiculos.Add(veiculo);
+                    }
                 }
             }
 

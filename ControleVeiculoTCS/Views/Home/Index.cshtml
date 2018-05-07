@@ -36,7 +36,7 @@
             </div>
             <div class="modal-body">
                 <h3>
-                    Veículo
+                    Cliente
                 </h3>
                 <hr />
                 <div class="form-horizontal">
@@ -168,9 +168,12 @@
             var orderUrl = '@Url.Action("getClientes", "Home")';
 
             var table = $("#clientesTable").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "filter": false,
+                "language": {
+                    "search": "Filtrar registros:"
+                },
+                //"processing": true,
+                //"serverSide": true,
+                //"filter": true,
                 "orderMulti": false,
                 "ajax": {
                     "url": orderUrl,
@@ -196,6 +199,8 @@
                 $("#nome").val('');
                 $("#endereco").val('');
                 $("#clienteId").val('');
+                $("#telefone").val('');
+                $("#email").val('');
                 $("#veiculosTable tbody tr").remove();
                 $("#salvarCliente").html("Salvar");
                 $('#novoClienteModal').modal('show');
@@ -301,6 +306,7 @@
                 });
 
                 var data = JSON.stringify({
+                    ClienteId: $("#clienteId").val(),
                     Nome: $("#nome").val(),
                     Endereco: $("#endereco").val(),
                     Telefone: $("#telefone").val(),
